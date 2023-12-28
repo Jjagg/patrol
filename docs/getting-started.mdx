@@ -61,6 +61,10 @@ Patrol UI tests. It is necessary to run UI tests (`flutter test` won't work! [He
    patrol doctor
    ```
 
+Patrol CLI invokes the Flutter CLI for certain commands. To override the command used,
+pass the `--flutter-command` argument or set the `PATROL_FLUTTER_COMMAND` environment
+variable.
+
 ### Integrate with native side
 
 The 3 first steps were common across platforms. The rest is platform-specific.

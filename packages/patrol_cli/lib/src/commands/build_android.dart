@@ -57,7 +57,12 @@ class BuildAndroidCommand extends PatrolCommand {
 
   @override
   Future<int> run() async {
-    unawaited(_analytics.sendCommand('build_android'));
+    unawaited(
+      _analytics.sendCommand(
+        FlutterVersion.fromCLI(flutterCommand),
+        'build_android',
+      ),
+    );
 
     final target = stringsArg('target');
     final targets = target.isNotEmpty
@@ -111,6 +116,7 @@ class BuildAndroidCommand extends PatrolCommand {
     }
 
     final flutterOpts = FlutterAppOptions(
+      command: flutterCommand,
       target: entrypoint.path,
       flavor: flavor,
       buildMode: buildMode,

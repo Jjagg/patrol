@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:patrol_cli/src/analytics/analytics.dart';
 import 'package:patrol_cli/src/base/constants.dart';
 import 'package:patrol_cli/src/base/logger.dart';
 import 'package:patrol_cli/src/base/process.dart';
@@ -25,6 +26,7 @@ class DoctorCommand extends PatrolCommand {
   @override
   Future<int> run() async {
     _printVersion();
+    _printFlutterInfo();
     _printAndroidSpecifics();
 
     if (_platform.isMacOS) {
@@ -36,6 +38,26 @@ class DoctorCommand extends PatrolCommand {
 
   void _printVersion() {
     _logger.info('Patrol CLI version: $version');
+  }
+
+  void _printFlutterInfo() {
+    final cmd = flutterCommand;
+    final result = io.Process.runSync(
+      flutterCommand.executable,
+      flutterCommand.arguments,
+    );
+
+    final success = result.exitCode == 0;
+
+    if (!success) {
+      _logger.err('Invalid Flutter command: $cmd');
+    } else {
+      _logger.success('Flutter command: $cmd');
+      final flutterVersion = FlutterVersion.fromCLI(cmd);
+      _logger.info(
+        '  Flutter ${flutterVersion.version} • channel ${flutterVersion.channel}',
+      );
+    }
   }
 
   void _printAndroidSpecifics() {

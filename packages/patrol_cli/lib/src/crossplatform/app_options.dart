@@ -4,15 +4,18 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' show basename;
 import 'package:patrol_cli/src/devices.dart';
 import 'package:patrol_cli/src/ios/ios_test_backend.dart';
+import 'package:patrol_cli/src/runner/flutter_command.dart';
 
 class FlutterAppOptions {
   const FlutterAppOptions({
+    required this.command,
     required this.target,
     required this.flavor,
     required this.buildMode,
     required this.dartDefines,
   });
 
+  final FlutterCommand command;
   final String target;
   final String? flavor;
   final BuildMode buildMode;
@@ -22,7 +25,8 @@ class FlutterAppOptions {
   @nonVirtual
   List<String> toFlutterAttachInvocation() {
     final cmd = [
-      ...['flutter', 'attach'],
+      ...[command.executable, ...command.arguments],
+      'attach',
       '--no-version-check',
       '--debug',
       ...['--target', target],
@@ -143,7 +147,8 @@ class IOSAppOptions {
   /// runs before xcodebuild and performs configuration.
   List<String> toFlutterBuildInvocation(BuildMode buildMode) {
     final cmd = [
-      ...['flutter', 'build', 'ios'],
+      ...[flutter.command.executable, ...flutter.command.arguments],
+      ...['build', 'ios'],
       '--no-version-check',
       ...[
         '--config-only',
@@ -228,7 +233,8 @@ class MacOSAppOptions {
   /// runs before xcodebuild and performs configuration.
   List<String> toFlutterBuildInvocation(BuildMode buildMode) {
     final cmd = [
-      ...['flutter', 'build', 'macos'],
+      ...[flutter.command.executable, ...flutter.command.arguments],
+      ...['build', 'macos'],
       '--no-version-check',
       ...[
         '--config-only',

@@ -62,7 +62,12 @@ class BuildIOSCommand extends PatrolCommand {
 
   @override
   Future<int> run() async {
-    unawaited(_analytics.sendCommand('build_ios'));
+    unawaited(
+      _analytics.sendCommand(
+        FlutterVersion.fromCLI(flutterCommand),
+        'build_ios',
+      ),
+    );
 
     final target = stringsArg('target');
     final targets = target.isNotEmpty
@@ -116,6 +121,7 @@ class BuildIOSCommand extends PatrolCommand {
     }
 
     final flutterOpts = FlutterAppOptions(
+      command: flutterCommand,
       target: entrypoint.path,
       flavor: flavor,
       buildMode: buildMode,
